@@ -1,5 +1,4 @@
 import {
-    FileText,
     MessageSquareText,
     Plus,
     Layers,
