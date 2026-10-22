@@ -1,6 +1,7 @@
-from llama_index.core import Settings
+from llama_index.core import Settings, VectorStoreIndex
 from llama_index.llms.groq import Groq
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
+from llama_index.vector_stores.postgres import PGVectorStore
 from backend.core.config import settings
 
 def init_rag_engine():
@@ -11,11 +12,8 @@ def init_rag_engine():
         - LLM : Groq
         - Embeddings : Modèle local HuggingFace (Sentence-Transformers)
         - Chunking : Taille et chevauchement des segments de texte
+        - Stockage Vectoriel : Connexion distante PostgreSQL (Neon / pgvector)
     """
-
-    print(f"GROQ_API_KEY : {settings.GROQ_API_KEY}")
-    print(f"MODEL_NAME : {settings.MODEL_NAME}")
-    print(f"EMBEDDING_MODEL : {settings.EMBEDDING_MODEL}")
     
     Settings.llm = Groq(
         model=settings.MODEL_NAME,
@@ -29,4 +27,13 @@ def init_rag_engine():
     Settings.chunk_size = 512
     Settings.chunk_overlap = 50
 
-    print(f"Moteur RAG configuré : LLM [{settings.MODEL_NAME}] | Embeddings [{settings.EMBEDDING_MODEL}]")
+    vector_store = PGVectorStore(
+        connection_string=settings.DATABASE_URL,
+        async_connection_string=settings.DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://"),
+        table_name="rag_documents",
+        embed_dim=settings.EMBED_DIM,
+    )
+
+    index = VectorStoreIndex.from_vector_store(vector_store=vector_store)
+    
+    return index.as_query_engine()

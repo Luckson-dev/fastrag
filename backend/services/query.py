@@ -1,5 +1,5 @@
-import os
-from llama_index.core import StorageContext, load_index_from_storage
+from llama_index.core import VectorStoreIndex
+from llama_index.vector_stores.postgres import PGVectorStore
 from backend.core.config import settings
 from backend.core.rag_engine import init_rag_engine
 
@@ -8,21 +8,23 @@ init_rag_engine()
 def query_rag(question: str) -> dict:
 
     """
-        Charge l'index persistant, interroge le RAG et retourne la réponse avec les sources.
+        Interroge le RAG directement depuis la base de données PostgreSQL (Neon) 
+        et retourne la réponse avec les sources.
     """
 
-    if not os.path.exists(settings.VECTOR_STORE_PATH):
-        raise FileNotFoundError("Aucun index vectoriel trouvé. Veuillez d'abord ingérer des documents.")
+    vector_store = PGVectorStore(
+        connection_string=settings.DATABASE_URL,
+        async_connection_string=settings.DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://"),
+        table_name="rag_documents",
+        embed_dim=settings.EMBED_DIM,
+    )
 
-    storage_context = StorageContext.from_defaults(persist_dir=settings.VECTOR_STORE_PATH)
-    index = load_index_from_storage(storage_context)
+    index = VectorStoreIndex.from_vector_store(vector_store=vector_store)
 
     query_engine = index.as_query_engine()
-
     response = query_engine.query(question)
 
     sources = []
-    
     if hasattr(response, "source_nodes") and response.source_nodes:
         sources = [node.node.get_content()[:300] + "..." for node in response.source_nodes]
 
