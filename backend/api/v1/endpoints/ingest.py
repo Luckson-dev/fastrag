@@ -1,4 +1,5 @@
 import os
+from core.config import settings
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from services.ingestion import ingest_documents
 from schemas.rag import IngestResponse
@@ -12,7 +13,7 @@ async def ingest_file(file: UploadFile = File(...)):
         Endpoint pour ingérer un fichier texte, le vectoriser et le stocker localement.
     """
 
-    data_dir = "./data"
+    data_dir = settings.DATA_DIR
     os.makedirs(data_dir, exist_ok=True)
     
     file_path = os.path.join(data_dir, file.filename)
