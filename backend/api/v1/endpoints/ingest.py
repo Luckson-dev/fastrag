@@ -1,7 +1,7 @@
 import os
 from fastapi import APIRouter, UploadFile, File, HTTPException
-from backend.services.ingestion import ingest_documents
-from backend.schemas.rag import IngestResponse
+from services.ingestion import ingest_documents
+from schemas.rag import IngestResponse
 
 router = APIRouter()
 

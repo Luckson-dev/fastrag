@@ -4,7 +4,7 @@ from llama_index.embeddings.google_genai import GoogleGenAIEmbedding
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.vector_stores.postgres import PGVectorStore
 from openai import api_key
-from backend.core.config import settings
+from core.config import settings
 
 def init_rag_engine():
 

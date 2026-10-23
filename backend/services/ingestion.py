@@ -1,8 +1,8 @@
 import os
 from llama_index.core import SimpleDirectoryReader, StorageContext, VectorStoreIndex
 from llama_index.vector_stores.postgres import PGVectorStore
-from backend.core.config import settings
-from backend.core.rag_engine import init_rag_engine
+from core.config import settings
+from core.rag_engine import init_rag_engine
 
 init_rag_engine()
 

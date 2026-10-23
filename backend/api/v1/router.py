@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from backend.api.v1.endpoints import ingest, query
+from api.v1.endpoints import ingest, query
 
 api_router = APIRouter()
 
