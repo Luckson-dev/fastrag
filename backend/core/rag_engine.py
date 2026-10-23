@@ -1,7 +1,9 @@
 from llama_index.core import Settings, VectorStoreIndex
 from llama_index.llms.groq import Groq
+from llama_index.embeddings.google_genai import GoogleGenAIEmbedding
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.vector_stores.postgres import PGVectorStore
+from openai import api_key
 from backend.core.config import settings
 
 def init_rag_engine():
@@ -20,9 +22,16 @@ def init_rag_engine():
         api_key=settings.GROQ_API_KEY
     )
 
-    Settings.embed_model = HuggingFaceEmbedding(
-        model_name=settings.EMBEDDING_MODEL
+    # Settings.embed_model = HuggingFaceEmbedding(
+    #     model_name=settings.EMBEDDING_MODEL
+    # )
+
+    Settings.embed_model = GoogleGenAIEmbedding(
+        model_name=settings.EMBEDDING_MODEL,
+        api_key=settings.GEMINI_API_KEY
     )
+
+    print(f"GEMINI_API_KEY: {settings.GEMINI_API_KEY}")
 
     Settings.chunk_size = 512
     Settings.chunk_overlap = 50

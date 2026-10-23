@@ -12,15 +12,19 @@ if env_path.exists():
 
 class Settings(BaseSettings):
 
+    GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
     GROQ_API_KEY: str = os.getenv("GROQ_API_KEY", "")
-    MODEL_NAME: str = "openai/gpt-oss-120b"
-    EMBEDDING_MODEL: str = "all-MiniLM-L6-v2"
-    EMBED_DIM: int = int(os.getenv("EMBED_DIM", 384))
+    MODEL_NAME: str = os.getenv("MODEL_NAME", "openai/gpt-oss-120b")
+    EMBEDDING_MODEL: str = os.getenv("EMBEDDING_MODEL", "gemini-embedding-2-preview")
+    EMBED_DIM: int = int(os.getenv("EMBED_DIM", 3072))
 
     DATA_DIR: str = str(BASE_DIR / "data")
 
     DATABASE_URL: str = os.getenv("DATABASE_URL")
-    FRONTEND_BASE_URL: str = "http://127.0.0.1:5173,http://localhost:5173"
+    FRONTEND_BASE_URL: str = os.getenv(
+        "FRONTEND_BASE_URL",
+        "http://127.0.0.1:5173,http://localhost:5173"
+    )
 
     @property
     def cors_origins_list(self) -> List[str]:
