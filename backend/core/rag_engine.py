@@ -29,8 +29,6 @@ def init_rag_engine():
         api_key=settings.GEMINI_API_KEY
     )
 
-    print(f"GEMINI_API_KEY: {settings.GEMINI_API_KEY}")
-
     Settings.chunk_size = 512
     Settings.chunk_overlap = 50
 
