@@ -1,9 +1,7 @@
 from llama_index.core import Settings, VectorStoreIndex
 from llama_index.llms.groq import Groq
 from llama_index.embeddings.google_genai import GoogleGenAIEmbedding
-from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.vector_stores.postgres import PGVectorStore
-from openai import api_key
 from core.config import settings
 
 def init_rag_engine():
